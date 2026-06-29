@@ -42,7 +42,6 @@ differ only by which `-rXX` plan the customer is on.
 |---|---|---|
 | INUA Tenant A | `inua-annual-r42` | `fixedPrice: 300000`, `recurringPrice: 30000` |
 | INUA Tenant B | `inua-annual-r50` | `fixedPrice: 250000`, `recurringPrice: 40000` |
-| Afora | `inua-annual-r45` | `fixedPrice: 0`, `recurringPrice: <base>` |
 | Per-client model | `per-client-r100` | none (rate is in the plan) |
 
 Example create-subscription with overrides (the EVERGREEN phase is the target):

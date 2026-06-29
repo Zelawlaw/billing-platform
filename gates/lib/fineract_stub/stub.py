@@ -6,7 +6,6 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 TENANTS = {
     "inua-tenant-a": {"loans": 42, "clients": 300},
     "inua-tenant-b": {"loans": 18, "clients": 150},
-    "afora":          {"loans": 12, "clients": 80},
     "per-client-demo": {"loans": 0, "clients": 37},
 }
 

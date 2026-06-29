@@ -57,14 +57,6 @@ curl -sS -X POST "${KB_URL}/1.0/kb/accounts/${ACCT_B}/tags" "${_hdrs[@]}" \
 SUB_B=$(subscribe "$ACCT_B" "inua-annual-r50" 250000 40000)
 echo "account=$ACCT_B subscription=$SUB_B"
 
-# Afora
-echo "--- Afora ---"
-ACCT_AFORA=$(create_account "Afora" "KES" "afora")
-curl -sS -X POST "${KB_URL}/1.0/kb/accounts/${ACCT_AFORA}/tags" "${_hdrs[@]}" \
-  -H "Content-Type: application/json" -d "[\"${AUTO_PAY_OFF_TAG}\"]" >/dev/null
-SUB_AFORA=$(subscribe "$ACCT_AFORA" "inua-annual-r45" 0 50000)
-echo "account=$ACCT_AFORA subscription=$SUB_AFORA"
-
 # Per-client demo
 echo "--- Per-client demo ---"
 ACCT_CLIENT=$(create_account "Per-Client Demo" "KES" "per-client-demo")

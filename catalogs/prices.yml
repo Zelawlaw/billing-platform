@@ -76,13 +76,13 @@ plans:
           KES: 50
           UGX: 1450
 
-  # --- Afora: base + 45/loan, no setup, give it a trial too -------------------
+  # --- INUA annual maintenance, rate 45/loan (any customer on 45) ------------
   - name: inua-annual-r45
     product: Maintenance
     trial_days: 30
     billing_period: ANNUAL
-    setup_fixed: 0                          # Afora has no setup -> leave 0 (no override)
-    base_recurring: 0                       # override to Afora's base fee
+    setup_fixed: 0                          # overridden per subscription
+    base_recurring: 0                       # overridden per subscription
     usage:
       - name: inua-loans-r45
         unit: loan

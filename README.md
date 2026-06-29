@@ -1,4 +1,4 @@
-# Billing Platform — Kill Bill for INUA, Afora & beyond
+# Billing Platform — Kill Bill for INUA & beyond
 
 One billing engine for every project I run. Kill Bill owns customers, catalogs, invoicing, payments, dunning, and entitlements. A thin Python rating service syncs usage counts (loans, clients) from each project's source system into Kill Bill.
 
@@ -8,7 +8,6 @@ One billing engine for every project I run. Kill Bill owns customers, catalogs, 
 |---|---|---|---|---|---|
 | INUA Tenant A | 300,000 | 30,000/yr | 42 × loans | Annual | KES |
 | INUA Tenant B | 250,000 | 40,000/yr | 50 × loans | Annual | KES |
-| Afora | 0 | 50,000/yr | 45 × loans | Annual | KES |
 | Per-client | 0 | 0 | 100 × clients | Monthly | KES |
 
 Plus 30-day free trial on every annual plan. You can add a new customer by choosing a plan and setting their numbers — no catalog changes needed.
@@ -16,7 +15,7 @@ Plus 30-day free trial on every annual plan. You can add a new customer by choos
 ## Architecture (30 seconds)
 
 ```
-Each of my platforms (INUA, Afora, …)
+Each platform (INUA and future projects)
   └─ is a Kill Bill "tenant"           ← own catalog, own API key/secret, isolated data
 
 Each of INUA's SACCOs/MFIs
@@ -121,7 +120,7 @@ The customer now has a 30-day free trial. After trial ends, billing starts:
 - Annual base: **30,000 KES** (billed in advance each year)
 - Per-loan: **42 KES** × number of loans taken (billed at year end)
 
-Repeat for Tenant B, Afora, and any future customer — just change the plan, amounts, and `externalKey`.
+Repeat for Tenant B or any future customer — just change the plan, amounts, and `externalKey`.
 
 ### 4. Push usage (loans taken)
 

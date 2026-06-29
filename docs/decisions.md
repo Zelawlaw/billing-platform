@@ -3,7 +3,7 @@
 ## Decisions made autonomously (2026-06-29, per brief §13 recommendations)
 
 ### 1. Platform = Kill Bill tenant
-**Decision:** Each platform (INUA, Afora, etc.) gets its own KB tenant.
+**Decision:** Each platform (INUA, etc.) gets its own KB tenant. New platforms (e.g. Afora) will be added as separate tenants by their respective AI agents.
 **Reasoning:** Isolated catalogs, API credentials, and data per platform is cleaner.
 INUA's own tenants (SACCO/MFI) are KB *accounts* inside the INUA tenant.
 
@@ -21,18 +21,15 @@ The rating service posts the actual count; Kill Bill sums and multiplies by rate
 **Decision:** Per-loan amount billed at period end. Setup + base in advance.
 No estimation/truing-up for Phase 1.
 
-### 5. Afora base fee — 50,000 KES
-**Decision:** Placeholder; confirmed per brief spec shape (0 setup, base recurring, 45×loans).
-
-### 6. Trial length — 30 days default
+### 5. Trial length — 30 days default
 **Decision:** 30-day free trial, configurable per plan. Same for all customers.
 
-### 7. Rating service language — Python
+### 6. Rating service language — Python
 **Decision:** Python (matches catalog generator). FastAPI for the API surface if needed later.
 
-### 8. Fineract access — stubbed
+### 7. Fineract access — stubbed
 **Decision:** Fake Fineract (`gates/lib/fineract_stub/stub.py`) for local dev and gates.
 Real Fineract integration when a running instance is available.
 
-### 9. Payments — invoice-only locally
+### 8. Payments — invoice-only locally
 **Decision:** AUTO_PAY_OFF on all test accounts. Payment gateway wired later at VPS time.
