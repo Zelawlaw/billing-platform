@@ -1,0 +1,116 @@
+# =============================================================================
+# prices.yml — single source of truth for one Kill Bill catalog (one platform).
+#
+# Run:  python3 generate.py prices.yml inua/catalog-v1.xml
+#
+# Why this file exists:
+#   Kill Bill catalogs are XML, and EVERY price must carry a value for EVERY
+#   declared currency. Hand-editing that XML is error-prone. Here you edit a
+#   small table; the generator emits valid, correctly-ordered catalog XML and
+#   fails loudly if any currency is missing a price.
+#
+# Mental model (see the brief, §4 / §4a):
+#   - setup_fixed   -> one-time fee. Modeled as the EVERGREEN phase `fixed`
+#                      price, which Kill Bill charges ONCE on phase entry
+#                      (i.e. when billing starts / trial ends). Default 0 here;
+#                      the real per-customer number is a per-SUBSCRIPTION
+#                      priceOverride, so you do NOT need a plan per customer.
+#   - base_recurring-> fixed maintenance charged every billing period. Also 0
+#                      here, set per-customer via priceOverride.
+#   - usage         -> the variable part (rate x count). Usage price is NOT
+#                      cleanly overridable per subscription, so the per-unit
+#                      RATE lives here in the catalog. Customers with the same
+#                      rate share a plan; a genuinely new rate = a new plan.
+#                      Usage is billed IN_ARREAR (at period end).
+#
+# Currency rule: a non-KES rate is a *business decision*, NOT an FX conversion
+# of the KES number. When you add a currency, set its real local rate.
+# =============================================================================
+
+catalog:
+  name: INUA
+  recurring_billing_mode: IN_ADVANCE        # base/recurring billed up front; usage is always in-arrear
+  effective_date: "2026-01-01T00:00:00+00:00"
+
+# Declare every currency you intend to bill in. Start with KES; add more as you
+# win customers in those markets. Adding one forces you to set its value on
+# every priced line below (the generator will error until you do).
+currencies:
+  - KES
+  - UGX
+
+# Metered units. `loan` = lending volume; `client` = headcount.
+units:
+  - loan
+  - client
+
+defaults:
+  trial_days: 30                            # default free-trial length; override per plan
+
+plans:
+  # --- INUA annual maintenance, rate 42/loan (Tenant A and anyone on 42) ------
+  - name: inua-annual-r42
+    product: Maintenance
+    trial_days: 30
+    billing_period: ANNUAL
+    setup_fixed: 0                          # overridden per subscription (e.g. 300000)
+    base_recurring: 0                       # overridden per subscription (e.g. 30000)
+    usage:
+      - name: inua-loans-r42
+        unit: loan
+        rate:
+          KES: 42
+          UGX: 1200
+
+  # --- INUA annual maintenance, rate 50/loan (Tenant B and anyone on 50) ------
+  - name: inua-annual-r50
+    product: Maintenance
+    trial_days: 30
+    billing_period: ANNUAL
+    setup_fixed: 0                          # e.g. override to 250000
+    base_recurring: 0                       # e.g. override to 40000
+    usage:
+      - name: inua-loans-r50
+        unit: loan
+        rate:
+          KES: 50
+          UGX: 1450
+
+  # --- Afora: base + 45/loan, no setup, give it a trial too -------------------
+  - name: inua-annual-r45
+    product: Maintenance
+    trial_days: 30
+    billing_period: ANNUAL
+    setup_fixed: 0                          # Afora has no setup -> leave 0 (no override)
+    base_recurring: 0                       # override to Afora's base fee
+    usage:
+      - name: inua-loans-r45
+        unit: loan
+        rate:
+          KES: 45
+          UGX: 1300
+
+  # --- "Per client" monthly billing type: 100 x clients -----------------------
+  #   Modeled as CONSUMABLE: the rating service posts ONE usage record per month
+  #   equal to the client count, so invoice = 100 x clients. (If you ever want
+  #   true high-water-mark capacity billing instead, see README note.)
+  - name: per-client-r100
+    product: PerClient
+    trial_days: 0                           # no trial on this model (set >0 to add one)
+    billing_period: MONTHLY
+    setup_fixed: 0
+    base_recurring: 0
+    usage:
+      - name: perclient-clients-r100
+        unit: client
+        rate:
+          KES: 100
+          UGX: 2900
+
+# Example of how a multi-currency usage rate looks once you add currencies:
+#   usage:
+#     - name: inua-loans-r42
+#       unit: loan
+#       rate:                # explicit per-currency map REQUIRED when >1 currency
+#         KES: 42
+#         UGX: 1300          # the real local rate, not 42 converted
