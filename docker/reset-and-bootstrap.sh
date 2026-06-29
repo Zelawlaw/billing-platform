@@ -48,6 +48,16 @@ CATALOG_HTTP=$(curl -sS -o /dev/null -w "%{http_code}" -X POST "${KB_URL}/1.0/kb
   --data-binary "@${SCRIPT_DIR}/../catalogs/inua/catalog-v1.xml")
 echo "catalog upload: HTTP ${CATALOG_HTTP}"
 
+echo "=== uploading overdue config ==="
+OVERDUE_HTTP=$(curl -sS -o /dev/null -w "%{http_code}" -X POST "${KB_URL}/1.0/kb/overdue" \
+  -u "${KB_USER}:${KB_PASS}" \
+  -H "X-Killbill-ApiKey: inua" \
+  -H "X-Killbill-ApiSecret: inua-secret" \
+  -H "Content-Type: text/xml" \
+  -H "X-Killbill-CreatedBy: bootstrap" \
+  --data-binary "@${SCRIPT_DIR}/../overdue/inua-overdue.xml")
+echo "overdue upload: HTTP ${OVERDUE_HTTP}"
+
 echo "=== setting clock to reference ==="
 curl -sS -X POST "${KB_URL}/1.0/kb/test/clock?requestedDate=2026-01-01T06:00:00.000Z" \
   -u "${KB_USER}:${KB_PASS}" \

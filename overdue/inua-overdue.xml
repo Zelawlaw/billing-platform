@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- INUA overdue configuration — uploaded per-tenant.
+     Short durations for test-clock validation; increase for production. -->
+<overdueConfig>
+   <accountOverdueStates>
+       <state name="CANCELLATION">
+           <condition>
+               <timeSinceEarliestUnpaidInvoiceEqualsOrExceeds>
+                   <unit>DAYS</unit><number>5</number>
+               </timeSinceEarliestUnpaidInvoiceEqualsOrExceeds>
+           </condition>
+           <externalMessage>Account cancelled due to non-payment</externalMessage>
+           <subscriptionCancellationPolicy>END_OF_TERM</subscriptionCancellationPolicy>
+           <autoReevaluationInterval>
+               <unit>DAYS</unit><number>1</number>
+           </autoReevaluationInterval>
+       </state>
+       <state name="BLOCKED">
+           <condition>
+               <timeSinceEarliestUnpaidInvoiceEqualsOrExceeds>
+                   <unit>DAYS</unit><number>2</number>
+               </timeSinceEarliestUnpaidInvoiceEqualsOrExceeds>
+           </condition>
+           <externalMessage>Account blocked — unpaid invoices over 2 days</externalMessage>
+           <blockChanges>true</blockChanges>
+           <disableEntitlementAndChangesBlocked>true</disableEntitlementAndChangesBlocked>
+           <autoReevaluationInterval>
+               <unit>DAYS</unit><number>1</number>
+           </autoReevaluationInterval>
+       </state>
+       <state name="WARNING">
+           <condition>
+               <timeSinceEarliestUnpaidInvoiceEqualsOrExceeds>
+                   <unit>DAYS</unit><number>1</number>
+               </timeSinceEarliestUnpaidInvoiceEqualsOrExceeds>
+           </condition>
+           <externalMessage>Invoice overdue — please pay soon</externalMessage>
+           <blockChanges>true</blockChanges>
+           <disableEntitlementAndChangesBlocked>false</disableEntitlementAndChangesBlocked>
+           <autoReevaluationInterval>
+               <unit>DAYS</unit><number>1</number>
+           </autoReevaluationInterval>
+       </state>
+   </accountOverdueStates>
+</overdueConfig>

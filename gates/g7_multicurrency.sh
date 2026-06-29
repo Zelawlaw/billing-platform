@@ -28,6 +28,7 @@ _pass "UGX subscription created"
 
 # Advance past trial
 kb_clock_set "2026-02-05T06:00:00.000Z"
+sleep 5  # wait for billing events
 
 # Verify invoice currency is UGX
 ITEM_CURRENCY=$(account_items "$ACCT" | awk -F'\t' 'NR==1{print $4}')

@@ -26,7 +26,7 @@ GATES=(
   g7_multicurrency.sh
   g8_per_client.sh
   g9_rating.sh
-  # g10_overdue.sh   # Phase 2 — enable when building entitlement
+  g10_overdue.sh   # Phase 2 — enable when building entitlement
 )
 
 echo "== resetting to a clean, bootstrapped state =="
