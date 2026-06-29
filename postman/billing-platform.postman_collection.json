@@ -1,16 +1,16 @@
 {
   "info": {
     "name": "Billing Platform — Kill Bill for INUA",
-    "description": "Every API call in the billing-platform journey, organized end-to-end.\n\nBase URL: http://127.0.0.1:8081\nAuth: admin / password\nTenant: apiKey=inua, apiSecret=inua-secret\n\nGenerated 2026-06-29. Regenerate whenever endpoints change.",
+    "description": "Every API call in the billing-platform journey, organized end-to-end.\n\nImport the matching environment: postman/billing-platform.postman_environment.json\nEnv vars also defined in: .env.example (root of repo)\n\nGenerated 2026-06-29. Regenerate whenever endpoints or env vars change.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "billing-platform"
   },
   "variable": [
-    { "key": "base_url",   "value": "http://127.0.0.1:8081" },
-    { "key": "api_key",    "value": "inua" },
-    { "key": "api_secret", "value": "inua-secret" },
-    { "key": "user",       "value": "admin" },
-    { "key": "pass",       "value": "password" }
+    { "key": "base_url",   "value": "http://127.0.0.1:8081", "description": "From .env.example: KB_URL" },
+    { "key": "api_key",    "value": "inua",                  "description": "From .env.example: KB_API_KEY" },
+    { "key": "api_secret", "value": "inua-secret",           "description": "From .env.example: KB_API_SECRET" },
+    { "key": "user",       "value": "admin",                 "description": "From .env.example: KB_USER" },
+    { "key": "pass",       "value": "password",              "description": "From .env.example: KB_PASS" }
   ],
   "auth": {
     "type": "basic",
@@ -51,7 +51,7 @@
             "url": {
               "raw": "{{base_url}}/1.0/kb/test/clock?requestedDate=2026-01-01T06:00:00.000Z",
               "host": ["{{base_url}}"], "path": ["1.0", "kb", "test", "clock"],
-              "query": [{"key": "requestedDate", "value": "2026-01-01T06:00:00.000Z"}]
+              "query": [{"key": "requestedDate", "value": "{{clock_ref}}"}]
             },
             "header": [
               { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
@@ -167,7 +167,7 @@
               { "key": "X-Killbill-CreatedBy", "value": "postman" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "body": { "mode": "raw", "raw": "{\"name\":\"INUA Tenant A\",\"currency\":\"KES\",\"billCycleDayLocal\":1,\"externalKey\":\"inua-tenant-a\"}" }
+            "body": { "mode": "raw", "raw": "{\"name\":\"INUA Tenant A\",\"currency\":\"KES\",\"billCycleDayLocal\":1,\"externalKey\":\"{{external_key}}\"}" }
           }
         },
         {
@@ -201,7 +201,7 @@
           "name": "Get account by externalKey",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/1.0/kb/accounts?externalKey=inua-tenant-a", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts"], "query": [{"key": "externalKey", "value": "inua-tenant-a"}] },
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts?externalKey={{external_key}}", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts"], "query": [{"key": "externalKey", "value": "{{external_key}}"}] },
             "header": [
               { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
               { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
@@ -293,7 +293,7 @@
               { "key": "X-Killbill-CreatedBy", "value": "postman" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "body": { "mode": "raw", "raw": "{\"accountId\":\"{{account_id}}\",\"planName\":\"inua-annual-r42\",\"priceOverrides\":[{\"planName\":\"inua-annual-r42\",\"phaseType\":\"EVERGREEN\",\"fixedPrice\":300000,\"recurringPrice\":30000,\"usagePrices\":[]}]}" }
+            "body": { "mode": "raw", "raw": "{\"accountId\":\"{{account_id}}\",\"planName\":\"inua-annual-r42\",\"priceOverrides\":[{\"planName\":\"inua-annual-r42\",\"phaseType\":\"EVERGREEN\",\"fixedPrice\":{{setup_amount}},\"recurringPrice\":{{base_amount}},\"usagePrices\":[]}]}" }
           }
         },
         {
@@ -327,7 +327,7 @@
           "name": "Get subscription by externalKey",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/1.0/kb/subscriptions?externalKey=inua-tenant-a", "host": ["{{base_url}}"], "path": ["1.0", "kb", "subscriptions"], "query": [{"key": "externalKey", "value": "inua-tenant-a"}] },
+            "url": { "raw": "{{base_url}}/1.0/kb/subscriptions?externalKey={{external_key}}", "host": ["{{base_url}}"], "path": ["1.0", "kb", "subscriptions"], "query": [{"key": "externalKey", "value": "{{external_key}}"}] },
             "header": [
               { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
               { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
@@ -353,7 +353,7 @@
               { "key": "X-Killbill-CreatedBy", "value": "postman" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "body": { "mode": "raw", "raw": "{\"subscriptionId\":\"{{subscription_id}}\",\"unitUsageRecords\":[{\"unitType\":\"loan\",\"usageRecords\":[{\"recordDate\":\"2026-06-15\",\"amount\":12}]}]}" }
+            "body": { "mode": "raw", "raw": "{\"subscriptionId\":\"{{subscription_id}}\",\"unitUsageRecords\":[{\"unitType\":\"loan\",\"usageRecords\":[{\"recordDate\":\"2026-06-15\",\"amount\":{{loan_count}}}]}]}" }
           }
         },
         {
@@ -367,7 +367,7 @@
               { "key": "X-Killbill-CreatedBy", "value": "postman" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "body": { "mode": "raw", "raw": "{\"subscriptionId\":\"{{subscription_id}}\",\"unitUsageRecords\":[{\"unitType\":\"client\",\"usageRecords\":[{\"recordDate\":\"2026-06-15\",\"amount\":37}]}]}" }
+            "body": { "mode": "raw", "raw": "{\"subscriptionId\":\"{{subscription_id}}\",\"unitUsageRecords\":[{\"unitType\":\"client\",\"usageRecords\":[{\"recordDate\":\"2026-06-15\",\"amount\":{{client_count}}}]}]}" }
           }
         }
       ]
@@ -500,7 +500,7 @@
           "name": "Check standing (externalKey)",
           "request": {
             "method": "GET",
-            "url": { "raw": "http://127.0.0.1:8000/can-proceed/inua-tenant-a", "host": ["http://127.0.0.1:8000"], "path": ["can-proceed", "inua-tenant-a"] },
+            "url": { "raw": "{{can_proceed_url}}/can-proceed/{{external_key}}", "host": ["{{can_proceed_url}}"], "path": ["can-proceed", "{{external_key}}"] },
             "header": [
               { "key": "Accept", "value": "application/json" }
             ]
@@ -510,7 +510,7 @@
           "name": "Healthcheck",
           "request": {
             "method": "GET",
-            "url": { "raw": "http://127.0.0.1:8000/health", "host": ["http://127.0.0.1:8000"], "path": ["health"] },
+            "url": { "raw": "{{can_proceed_url}}/health", "host": ["{{can_proceed_url}}"], "path": ["health"] },
             "header": [
               { "key": "Accept", "value": "application/json" }
             ]
@@ -535,7 +535,7 @@
           "name": "FULL FLOW (set clock → create account → subscribe → advance → check invoice)",
           "request": {
             "method": "POST",
-            "url": { "raw": "{{base_url}}/1.0/kb/test/clock?requestedDate=2026-01-01T06:00:00.000Z", "host": ["{{base_url}}"], "path": ["1.0", "kb", "test", "clock"], "query": [{"key": "requestedDate", "value": "2026-01-01T06:00:00.000Z"}] },
+            "url": { "raw": "{{base_url}}/1.0/kb/test/clock?requestedDate=2026-01-01T06:00:00.000Z", "host": ["{{base_url}}"], "path": ["1.0", "kb", "test", "clock"], "query": [{"key": "requestedDate", "value": "{{clock_ref}}"}] },
             "header": [
               { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
               { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
