@@ -1,0 +1,550 @@
+{
+  "info": {
+    "name": "Billing Platform — Kill Bill for INUA",
+    "description": "Every API call in the billing-platform journey, organized end-to-end.\n\nBase URL: http://127.0.0.1:8081\nAuth: admin / password\nTenant: apiKey=inua, apiSecret=inua-secret\n\nGenerated 2026-06-29. Regenerate whenever endpoints change.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "billing-platform"
+  },
+  "variable": [
+    { "key": "base_url",   "value": "http://127.0.0.1:8081" },
+    { "key": "api_key",    "value": "inua" },
+    { "key": "api_secret", "value": "inua-secret" },
+    { "key": "user",       "value": "admin" },
+    { "key": "pass",       "value": "password" }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{user}}" },
+      { "key": "password", "value": "{{pass}}" }
+    ]
+  },
+  "item": [
+    {
+      "name": "00 — Health & Clock",
+      "description": "Stack health checks and test-clock control.",
+      "item": [
+        {
+          "name": "Healthcheck",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/healthcheck", "host": ["{{base_url}}"], "path": ["1.0", "healthcheck"] }
+          }
+        },
+        {
+          "name": "Get current clock",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/test/clock", "host": ["{{base_url}}"], "path": ["1.0", "kb", "test", "clock"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Set clock to date",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/1.0/kb/test/clock?requestedDate=2026-01-01T06:00:00.000Z",
+              "host": ["{{base_url}}"], "path": ["1.0", "kb", "test", "clock"],
+              "query": [{"key": "requestedDate", "value": "2026-01-01T06:00:00.000Z"}]
+            },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" }
+            ]
+          }
+        },
+        {
+          "name": "Add days to clock",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{base_url}}/1.0/kb/test/clock?days=1", "host": ["{{base_url}}"], "path": ["1.0", "kb", "test", "clock"], "query": [{"key": "days", "value": "1"}] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "01 — Tenant Setup",
+      "description": "Create a Kill Bill tenant (one per platform).",
+      "item": [
+        {
+          "name": "Create tenant (INUA)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/tenants", "host": ["{{base_url}}"], "path": ["1.0", "kb", "tenants"] },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"apiKey\": \"inua\", \"apiSecret\": \"inua-secret\"}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 — Catalog",
+      "description": "Upload and inspect the billing catalog (products, plans, prices, units).",
+      "item": [
+        {
+          "name": "Validate catalog XML",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/catalog/xml/validate", "host": ["{{base_url}}"], "path": ["1.0", "kb", "catalog", "xml", "validate"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "text/xml" }
+            ],
+            "body": { "mode": "raw", "raw": "<!-- paste catalog XML here or use Upload Catalog -->" }
+          }
+        },
+        {
+          "name": "Upload catalog XML",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/catalog", "host": ["{{base_url}}"], "path": ["1.0", "kb", "catalog"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "text/xml" }
+            ],
+            "body": { "mode": "raw", "raw": "<!-- paste catalog XML here or use inua/catalog-v1.xml -->" }
+          }
+        },
+        {
+          "name": "Get catalog (JSON)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/catalog", "host": ["{{base_url}}"], "path": ["1.0", "kb", "catalog"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get available base plans",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/catalog/availableBasePlans", "host": ["{{base_url}}"], "path": ["1.0", "kb", "catalog", "availableBasePlans"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 — Account",
+      "description": "Create and manage billing accounts (customers).",
+      "item": [
+        {
+          "name": "Create account (KES, with externalKey)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"name\":\"INUA Tenant A\",\"currency\":\"KES\",\"billCycleDayLocal\":1,\"externalKey\":\"inua-tenant-a\"}" }
+          }
+        },
+        {
+          "name": "Create account (UGX)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"name\":\"UGX Customer\",\"currency\":\"UGX\",\"billCycleDayLocal\":1,\"externalKey\":\"ugx-customer\"}" }
+          }
+        },
+        {
+          "name": "Get account by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}?accountWithBalanceAndCBA=true", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}"], "query": [{"key": "accountWithBalanceAndCBA", "value": "true"}] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get account by externalKey",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts?externalKey=inua-tenant-a", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts"], "query": [{"key": "externalKey", "value": "inua-tenant-a"}] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get account overdue state",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/overdue", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "overdue"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get account blocking states",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/block", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "block"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get account bundles",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/bundles", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "bundles"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Add AUTO_PAY_OFF tag to account",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/tags", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "tags"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "[\"00000000-0000-0000-0000-000000000001\"]" }
+          }
+        },
+        {
+          "name": "Get account tags",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/tags", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "tags"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 — Subscription",
+      "description": "Create subscriptions with price overrides. View subscription state.",
+      "item": [
+        {
+          "name": "Create subscription (inua-annual-r42, with overrides)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/subscriptions", "host": ["{{base_url}}"], "path": ["1.0", "kb", "subscriptions"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"accountId\":\"{{account_id}}\",\"planName\":\"inua-annual-r42\",\"priceOverrides\":[{\"planName\":\"inua-annual-r42\",\"phaseType\":\"EVERGREEN\",\"fixedPrice\":300000,\"recurringPrice\":30000,\"usagePrices\":[]}]}" }
+          }
+        },
+        {
+          "name": "Create subscription (per-client-r100)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/subscriptions", "host": ["{{base_url}}"], "path": ["1.0", "kb", "subscriptions"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"accountId\":\"{{account_id}}\",\"planName\":\"per-client-r100\",\"priceOverrides\":[{\"planName\":\"per-client-r100\",\"phaseType\":\"EVERGREEN\",\"fixedPrice\":0,\"recurringPrice\":0,\"usagePrices\":[]}]}" }
+          }
+        },
+        {
+          "name": "Get subscription by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/subscriptions/{{subscription_id}}", "host": ["{{base_url}}"], "path": ["1.0", "kb", "subscriptions", "{{subscription_id}}"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get subscription by externalKey",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/subscriptions?externalKey=inua-tenant-a", "host": ["{{base_url}}"], "path": ["1.0", "kb", "subscriptions"], "query": [{"key": "externalKey", "value": "inua-tenant-a"}] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 — Usage",
+      "description": "Record metered usage (loans, clients).",
+      "item": [
+        {
+          "name": "Record loan usage",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/usages", "host": ["{{base_url}}"], "path": ["1.0", "kb", "usages"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"subscriptionId\":\"{{subscription_id}}\",\"unitUsageRecords\":[{\"unitType\":\"loan\",\"usageRecords\":[{\"recordDate\":\"2026-06-15\",\"amount\":12}]}]}" }
+          }
+        },
+        {
+          "name": "Record client usage",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/usages", "host": ["{{base_url}}"], "path": ["1.0", "kb", "usages"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"subscriptionId\":\"{{subscription_id}}\",\"unitUsageRecords\":[{\"unitType\":\"client\",\"usageRecords\":[{\"recordDate\":\"2026-06-15\",\"amount\":37}]}]}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 — Invoices",
+      "description": "Fetch and inspect invoices. Trigger dry-run projections.",
+      "item": [
+        {
+          "name": "Get account invoices (list)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/invoices", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "invoices"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get account invoices (unpaid only)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/invoices?unpaidInvoicesOnly=true", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "invoices"], "query": [{"key": "unpaidInvoicesOnly", "value": "true"}] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get single invoice (with items)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/invoices/{{invoice_id}}?withItems=true", "host": ["{{base_url}}"], "path": ["1.0", "kb", "invoices", "{{invoice_id}}"], "query": [{"key": "withItems", "value": "true"}] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Trigger invoice (target date)",
+          "_comment": "POST /1.0/kb/invoices with accountId + targetDate triggers invoice generation",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/invoices", "host": ["{{base_url}}"], "path": ["1.0", "kb", "invoices"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\"accountId\":\"{{account_id}}\",\"targetDate\":\"2027-02-01\"}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 — Overdue & Dunning",
+      "description": "Upload overdue config. Check account standing.",
+      "item": [
+        {
+          "name": "Upload overdue config",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/overdue", "host": ["{{base_url}}"], "path": ["1.0", "kb", "overdue"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Content-Type", "value": "text/xml" }
+            ],
+            "body": { "mode": "raw", "raw": "<!-- paste overdue/inua-overdue.xml here -->" }
+          }
+        },
+        {
+          "name": "Get overdue config (JSON)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/overdue", "host": ["{{base_url}}"], "path": ["1.0", "kb", "overdue"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get account overdue state",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/overdue", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "overdue"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Get account blocking states",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/1.0/kb/accounts/{{account_id}}/block", "host": ["{{base_url}}"], "path": ["1.0", "kb", "accounts", "{{account_id}}", "block"] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" },
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 — can-proceed?",
+      "description": "Platform integration: check if a tenant is in good billing standing.\nRun locally: python3 rating-service/src/can_proceed.py --server\nDefault port: 8000",
+      "item": [
+        {
+          "name": "Check standing (externalKey)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://127.0.0.1:8000/can-proceed/inua-tenant-a", "host": ["http://127.0.0.1:8000"], "path": ["can-proceed", "inua-tenant-a"] },
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "Healthcheck",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://127.0.0.1:8000/health", "host": ["http://127.0.0.1:8000"], "path": ["health"] },
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ]
+          }
+        },
+        {
+          "name": "can-proceed? — CLI mode",
+          "_comment": "Run this from a terminal, not in Postman.",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "(terminal) python3 rating-service/src/can_proceed.py inua-tenant-a", "host": [""], "path": [""] },
+            "description": "Run from terminal:\ncd billing-platform && source .venv/bin/activate && python3 rating-service/src/can_proceed.py inua-tenant-a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 — Audit & Summary",
+      "description": "End-to-end journey: tenant → catalog → account → subscription → usage → invoice → standing.",
+      "item": [
+        {
+          "name": "FULL FLOW (set clock → create account → subscribe → advance → check invoice)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/1.0/kb/test/clock?requestedDate=2026-01-01T06:00:00.000Z", "host": ["{{base_url}}"], "path": ["1.0", "kb", "test", "clock"], "query": [{"key": "requestedDate", "value": "2026-01-01T06:00:00.000Z"}] },
+            "header": [
+              { "key": "X-Killbill-ApiKey",    "value": "{{api_key}}" },
+              { "key": "X-Killbill-ApiSecret", "value": "{{api_secret}}" },
+              { "key": "X-Killbill-CreatedBy", "value": "postman" }
+            ],
+            "description": "Step 1 of 7: Set clock to reference date.\nThen run the requests above in order:\n  03 → Create account\n  04 → Create subscription\n  00 → Set clock to 2026-02-05 (advance past trial)\n  06 → Get account invoices (confirm setup+base appear)\n  05 → Record usage\n  00 → Set clock to 2027-02-05 (period end)\n  06 → Get single invoice (confirm USAGE item)\n  07 → Get account overdue state\n  08 → can-proceed? check"
+          }
+        }
+      ]
+    }
+  ]
+}
