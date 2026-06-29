@@ -35,8 +35,9 @@ Kill Bill runs in Docker on your machine. A tiny Python service pulls loan/clien
 ### Prerequisites
 
 - Docker (OrbStack or Docker Desktop)
-- Python 3 with `pyyaml` (`pip install pyyaml` in a venv)
+- Python 3 with `pyyaml` and `requests` (`pip install pyyaml requests` in a venv)
 - `curl` and `jq`
+- **Postman collection**: `postman/billing-platform.postman_collection.json` — every endpoint, journey-ordered
 
 ### 1. Start the stack
 
