@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Billing Platform — Kill Bill for INUA",
-    "description": "Every API call in the billing-platform journey, organized end-to-end.\n\nImport the matching environment: postman/billing-platform.postman_environment.json\nEnv vars also defined in: .env.example (root of repo)\n\nGenerated 2026-06-29. Regenerate whenever endpoints or env vars change.",
+    "description": "Every API call in the billing-platform journey, organized end-to-end.\n\nImport one of the two Postman environments:\n  - postman/billing-platform.postman_environment.local.json      (local dev)\n  - postman/billing-platform.postman_environment.production.json  (VPS)\nEnv vars also defined in: .env.example (root of repo)\n\nGenerated 2026-06-29. Regenerate whenever endpoints or env vars change.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "billing-platform"
   },
@@ -21,8 +21,8 @@
   },
   "item": [
     {
-      "name": "00 — Health & Clock",
-      "description": "Stack health checks and test-clock control.",
+      "name": "00 — Health & Clock (local only)",
+      "description": "Stack health checks and test-clock control.\n\nNOTE: Test-clock endpoints (GET/POST/PUT /test/clock) only work when KILLBILL_SERVER_TEST_MODE=true. In production (test_mode=false) these return 404. Skip this folder in production environments.",
       "item": [
         {
           "name": "Healthcheck",
